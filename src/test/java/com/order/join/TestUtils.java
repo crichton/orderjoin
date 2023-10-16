@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
-import java.util.Scanner;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class TestUtils {
 
@@ -21,27 +23,28 @@ public class TestUtils {
         }
     }
 
-    public static String contentOfOld(String resource) {
-        // this doesnt work with newlines in json
-        String text = new Scanner(INSTANCE.getClass().getResourceAsStream(resource), "UTF-8").useDelimiter("\\A")
-                .next();
-        return text;
+    public static ObjectMapper jsonMapper() {
+        var om = new ObjectMapper();
+        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
+        om.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
+        om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return om;
     }
 
-    public static String mockReplacmentOrder_60() throws IOException {
-        return contentOf("RawReplacementOrder_60.json");
+    public static String order_sale_valid() throws IOException {
+        return contentOf("order-sale-model-valid.json");
     }
 
-    public static String mockReplacmentOrderFailureLatest() throws IOException {
-        return contentOf("ReplacementOrderFailureLatest.json");
+    public static String order_sale_invalid() throws IOException {
+        return contentOf("order-sale-model-invalid.json");
     }
 
-    public static String mockStandardOrder() throws IOException {
-        return contentOf("order-create-standard.json");
+    public static String product_valid() throws IOException {
+        return contentOf("product-model-valid.json");
     }
 
-    public static String mockStandardOrderEvent70() throws IOException {
-        return contentOf("order-create-standard-70.json");
+    public static String merged_order_product_valid() throws IOException {
+        return contentOf("merged-order-product_model-valid.json");
     }
 
 }

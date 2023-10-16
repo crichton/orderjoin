@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "object",
+      "properties": {
+        "catalog_number": {
+          "type": "string",
+          "pattern": "^[0-9]{5}$"  // character string containing only digits
+        },
+        "country": {
+          "type": "string"
+        }
+      },
+      "required": ["catalog_number", "country"]
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "catalog_number": {
+          "type": "string", 
+          "pattern": "^[0-9]{5}$"  // character string containing only digits
+        },
+        "order_number": {
+          "type": "string",
+          "pattern": "^[0-9]+$"  // Only digits
+        },
+        "quantity": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$" // Only digits, not starting with zero
+        },
+        "sales_date": {
+          "type": "string",
+          "format": "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
+        },
+        "is_selling": {
+          "type": "boolean"
+        },
+        "model": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "registration_id": {
+          "type": "string"
+        },
+        "registration_number": {
+          "type": "string"
+        },
+        "selling_status_date": {
+          "type": "string",
+          "format": "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
+        },
+        "country": {
+          "type": "string"
+        }
+      },
+      "required": ["catalog_number", "order_number", "quantity", "sales_date", "is_selling", "model", "product_id", "registration_id", "registration_number", "selling_status_date", "country"]
+    },
+    "audit": {
+      "type": "object",
+      "properties": {
+        "event_name": {
+          "type": "string"
+        },
+        "source_system": {
+          "type": "string"
+        }
+      },
+      "required": ["event_name", "source_system"]
+    }
+  },
+  "required": ["key", "value", "audit"]
+}

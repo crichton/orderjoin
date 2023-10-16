@@ -21,6 +21,13 @@ orderjoin:
   environmentId: ${ENV_ID:dev}
   applicationId: ${APPLICATION_ID:orderjoin}
   trusted-packages: "com.order.join.*"
-  raw-topic: "${RAW_TOPIC:order.raw}"
+  raw-topic: "${RAW_TOPIC:us.order.raw}"
+  error-topic: "${ERROR_TOPIC:us.order.raw.error}"
+  source-topic: "${SOURCE_TOPIC:us.order.canonical}"
+  source-topic-filtered: "${SOURCE_TOPIC_FILTERED:us.order.001.filtered}"
+  join-topic: "${JOIN_TOPIC:us.order.product.001.joined}"
+  lookup-topic: "${LOOKUP_TOPIC:us.product.canonical}"
+  lookup-topic-filtered: "${LOOKUP_TOPIC_FILTERED:us.product.001.filtered}"
+  country-filter: "${COUNTRY_FILTER:001}"
   auto-offset-reset: "earliest"
   bootstrap-servers: "${spring.embedded.kafka.brokers}"

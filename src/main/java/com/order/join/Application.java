@@ -14,13 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 
 @SpringBootApplication
 @EnableKafkaStreams
+@EnableKafka
+@Configuration
 public class Application {
 
-    TopologyBuilder data = new TopologyBuilder();
 
     @Autowired 
     private ApplicationConfiguration appConfig;
@@ -28,18 +31,20 @@ public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
+
     public ApplicationConfiguration config() {
         return appConfig;
     }
 
     // Kafka Streams configuration
     @Bean
-    public KafkaStreams kafkaStreams() {
+    public KafkaStreams kafkaStreams(StreamsBuilder builder) {
         Properties properties = new Properties();
         properties.put(StreamsConfig.APPLICATION_ID_CONFIG, appConfig.getApplicationId());
         properties.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, appConfig.getBootstrapServers()); // Kafka broker
         properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, appConfig.getAutoOffsetReset());
-        Topology joinTopology = TopologyBuilder.createTopology(appConfig);
+        TopologyBuilder tb = new TopologyBuilder(appConfig);
+        Topology joinTopology = tb.createTopology(builder);
         // Create and start the KafkaStreams instance
         KafkaStreams kafkaStreams = new KafkaStreams(joinTopology, properties);
         kafkaStreams.start();

@@ -23,6 +23,13 @@ public class ApplicationConfiguration {
     private String bootstrapServers;
     private String autoOffsetReset;
     private String rawTopic;
+    private String sourceTopic;
+    private String sourceTopicFiltered;
+    private String lookupTopic;
+    private String lookupTopicFiltered;
+    private String joinTopic;
+    private String errorTopic;
+    private String countryFilter;
 
     @Bean
     public ObjectMapper objectMapper() {
@@ -54,6 +61,7 @@ public class ApplicationConfiguration {
     public void setRawTopic(String rawTopic) {
         this.rawTopic = rawTopic;
     }
+    
 
     public String getApplicationId() {
 		return applicationId;
@@ -69,7 +77,49 @@ public class ApplicationConfiguration {
 	public void setAutoOffsetReset(String autoOffsetReset) {
 		this.autoOffsetReset = autoOffsetReset;
 	}
-	@Override
+	public String getSourceTopic() {
+        return sourceTopic;
+    }
+    public void setSourceTopic(String sourceTopic) {
+        this.sourceTopic = sourceTopic;
+    }
+    public String getLookupTopic() {
+        return lookupTopic;
+    }
+    public void setLookupTopic(String lookupTopic) {
+        this.lookupTopic = lookupTopic;
+    }
+    public String getJoinTopic() {
+        return joinTopic;
+    }
+    public void setJoinTopic(String joinTopic) {
+        this.joinTopic = joinTopic;
+    }
+    public String getErrorTopic() {
+        return errorTopic;
+    }
+    public void setErrorTopic(String errorTopic) {
+        this.errorTopic = errorTopic;
+    }
+    public String getCountryFilter() {
+        return countryFilter;
+    }
+    public void setCountryFilter(String countryFilter) {
+        this.countryFilter = countryFilter;
+    }
+    public String getSourceTopicFiltered() {
+        return sourceTopicFiltered;
+    }
+    public void setSourceTopicFiltered(String sourceTopicFiltered) {
+        this.sourceTopicFiltered = sourceTopicFiltered;
+    }
+    public String getLookupTopicFiltered() {
+        return lookupTopicFiltered;
+    }
+    public void setLookupTopicFiltered(String lookupTopicFiltered) {
+        this.lookupTopicFiltered = lookupTopicFiltered;
+    }
+    @Override
     public String toString() {
         return "AppProperties{" + "RawTopic='" + rawTopic+ '\'' + '}';
     }

@@ -38,21 +38,23 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:2.6.7'
     implementation 'org.springframework.boot:spring-boot-starter-test:2.6.7'
 	 implementation 'org.springframework.boot:spring-boot-starter-actuator:2.6.7'
+	 implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.7'
     implementation 'org.everit.json:org.everit.json.schema:1.3.0'
-    implementation 'jakarta.validation:jakarta.validation-api:2.0.2'
-    implementation 'org.hibernate:hibernate-validator:6.2.2.Final'
-    implementation 'javax.el:javax.el-api:2.2.4'
+    //implementation 'jakarta.validation:jakarta.validation-api:2.0.2'
+    //implementation 'org.hibernate:hibernate-validator:5.2.4.Final'
+    //implementation 'org.hibernate:hibernate-validator:6.2.2.Final'
+    //implementation 'javax.el:javax.el-api:2.2.4'
     implementation 'org.springframework.kafka:spring-kafka:2.9.0'
     implementation 'org.springframework.kafka:spring-kafka-test:2.9.0'
     implementation 'org.openapitools:jackson-databind-nullable:0.2.0'
-    implementation 'org.hibernate:hibernate-validator:6.2.2.Final'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 def imageBaseName = rootProject.name
 
  bootJar {
-     mainClass = 'com.orderjoin.Application'
+     mainClass = 'com.order.join.Application'
  }
   
 tasks.withType(JavaCompile) {
