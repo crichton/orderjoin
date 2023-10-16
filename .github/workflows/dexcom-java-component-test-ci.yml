@@ -1,0 +1,21 @@
+name: dexcom-java-component-test-ci
+
+on:
+  push:
+    branches-ignore: [ "main" ]
+    paths-ignore:
+      - 'harness-deploy/**'
+      - 'README.md'
+      - '.github/**'
+      - '.gitignore'
+  workflow_dispatch: 
+
+jobs:
+  test:
+    name: Java Component Test
+    uses: dexcomit/github-workflows/.github/workflows/java-component-tests.yml@master
+    with:
+      componentName: 'it-oms-order-service'
+      componentBaseVersion: '1.0.1'
+      gradle-version: 7.5.1
+      java-version: 17

@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "object",
+      "properties": {
+        "catalog_number": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 5
+        },
+        "country": {
+          "type": "string"
+        }
+      },
+      "required": ["catalog_number", "country"]
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "catalog_number": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 5
+        },
+        "is_selling": {
+          "type": "boolean"
+        },
+        "model": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "registration_id": {
+          "type": "string"
+        },
+        "registration_number": {
+          "type": "string"
+        },
+        "selling_status_date": {
+          "type": "string",
+          "format": "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
+        },
+        "country": {
+          "type": "string"
+        }
+      },
+      "required": ["catalog_number", "is_selling", "model", "product_id", "registration_id", "registration_number", "selling_status_date", "country"]
+    },
+    "audit": {
+      "type": "object",
+      "properties": {
+        "event_name": {
+          "type": "string"
+        },
+        "source_system": {
+          "type": "string"
+        }
+      },
+      "required": ["event_name", "source_system"]
+    }
+  },
+  "required": ["key", "value", "audit"]
+}

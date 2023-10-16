@@ -1,0 +1,71 @@
+plugins {
+    id 'java'
+	 id 'org.springframework.boot' version '2.6.7'
+    id 'jacoco'
+    id 'eclipse'
+    id 'org.jsonschema2dataclass' version '3.0.0'
+}
+
+jsonSchema2Pojo {
+    targetPackage = 'com.order.join.models'
+    useTitleAsClassname = true
+    generateBuilders = true
+    includeJsr303Annotations = true
+    useInnerClassBuilders = true
+}
+
+group = 'com.orderjoin'
+version = '1.0.0-latest'
+description = 'orderjoin'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+compileJava.dependsOn('generateJsonSchema2DataClass0')
+
+sourceSets {
+    main {
+        java.srcDirs += 'build/generated/sources/js2d'
+    }
+}
+
+dependencies {
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+    //implementation platform('org.springframework.boot:spring-boot-dependencies:2.6.7') 
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.7'
+    implementation 'org.springframework.boot:spring-boot-starter-test:2.6.7'
+	 implementation 'org.springframework.boot:spring-boot-starter-actuator:2.6.7'
+    implementation 'org.everit.json:org.everit.json.schema:1.3.0'
+    implementation 'jakarta.validation:jakarta.validation-api:2.0.2'
+    implementation 'org.hibernate:hibernate-validator:6.2.2.Final'
+    implementation 'javax.el:javax.el-api:2.2.4'
+    implementation 'org.springframework.kafka:spring-kafka:2.9.0'
+    implementation 'org.springframework.kafka:spring-kafka-test:2.9.0'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.0'
+    implementation 'org.hibernate:hibernate-validator:6.2.2.Final'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+}
+
+def imageBaseName = rootProject.name
+
+ bootJar {
+     mainClass = 'com.orderjoin.Application'
+ }
+  
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+jacocoTestReport {
+    dependsOn test
+}
+
+test {
+}

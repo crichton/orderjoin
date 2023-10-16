@@ -1,0 +1,26 @@
+management:
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+      probes:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+spring:
+  kafka:
+    bootstrap-servers: "${spring.embedded.kafka.brokers}"
+    jaas:
+      enabled: false
+    streams:
+      application-id: "${orderjoin.applicationId}"
+
+orderjoin:
+  environmentId: ${ENV_ID:dev}
+  applicationId: ${APPLICATION_ID:orderjoin}
+  trusted-packages: "com.order.join.*"
+  raw-topic: "${RAW_TOPIC:order.raw}"
+  auto-offset-reset: "earliest"
+  bootstrap-servers: "${spring.embedded.kafka.brokers}"
