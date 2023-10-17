@@ -12,8 +12,6 @@ management:
 spring:
   kafka:
     bootstrap-servers: "${BOOTSTRAP_SERVER:localhost:9092}"
-    jaas:
-      enabled: false
     streams:
       application-id: "${orderjoin.applicationId}"
 

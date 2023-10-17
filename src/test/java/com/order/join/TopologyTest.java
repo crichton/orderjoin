@@ -13,6 +13,8 @@ import org.apache.kafka.streams.TestOutputTopic;
 import org.apache.kafka.streams.TopologyTestDriver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.kafka.config.KafkaStreamsConfiguration;
 
 import javax.validation.Validator;
@@ -179,6 +181,7 @@ class TopologyTest {
             MergedOrderProductModel mergedModel = TestUtils.jsonMapper().readValue(valueRaw, MergedOrderProductModel.class);
             assertNotNull(mergedModel);
             assertTrue(DataValidator.validate(mergedModel));
+            JSONAssert.assertEquals(TestUtils.merged_order_product_valid(), valueRaw, JSONCompareMode.LENIENT);
         } catch (Exception ex) {
             Assertions.fail("Failed with error", ex);
         }

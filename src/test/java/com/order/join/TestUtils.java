@@ -44,7 +44,7 @@ public class TestUtils {
     }
 
     public static String merged_order_product_valid() throws IOException {
-        return contentOf("merged-order-product_model-valid.json");
+        return contentOf("merged-order-product-model-valid.json");
     }
 
 }

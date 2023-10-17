@@ -12,6 +12,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -30,6 +32,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,14 +41,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@EmbeddedKafka(partitions = 1, topics = { "us.order.raw", "us.order.raw.error", "us.order.canonical","us.order.001.filtered","us.order.product.001.joined", "us.product.canonical","us.product.001.canonical"})
+@EmbeddedKafka(partitions = 1, topics = { "us.order.raw", "us.order.raw.error", "us.order.canonical","us.order.001.filtered","us.order.product.001.joined", "us.product.canonical","us.product.001.filtered"})
 @EnableKafka
 @DirtiesContext
 @ActiveProfiles("test")
 public class IntegrationTest {
 
-    private static final String INPUT_TOPIC = "inputTopic";
-    private static final String OUTPUT_TOPIC = "outputTopic";
 
     @Autowired
     private KafkaListenerEndpointRegistry endpointRegistry;
@@ -56,6 +57,7 @@ public class IntegrationTest {
 
     private Producer<String, String> producer;
     private Consumer<String, String> consumer;
+    private Consumer<String, String> consumerError;
 
     @BeforeEach
     public void setUp() {
@@ -69,7 +71,7 @@ public class IntegrationTest {
         producer = producerFactory.createProducer();
 
         // Configure the consumer properties
-        Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("test-group", "false", embeddedKafka.getBrokersAsString());
+        Map<String, Object> consumerProps = KafkaTestUtils.consumerProps(embeddedKafka.getBrokersAsString(), "test-group", "false");
         consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
 
@@ -77,32 +79,36 @@ public class IntegrationTest {
         ConsumerFactory<String, String> consumerFactory = new DefaultKafkaConsumerFactory<>(consumerProps);
         consumer = consumerFactory.createConsumer();
         consumer.subscribe(Collections.singleton(appConfig.getJoinTopic()));
+        consumerError = consumerFactory.createConsumer();
+        consumerError.subscribe(Collections.singleton(appConfig.getErrorTopic()));
 
-        // Wait for the consumer to be ready
-        ContainerTestUtils.waitForAssignment(consumer, embeddedKafka.getPartitionsPerTopic());
+
     }
 
     @AfterEach
     public void tearDown() {
         producer.close();
         consumer.close();
+        consumerError.close();
     }
 
     @Test
-    public void testKafkaIntegration() throws InterruptedException {
+    public void testKafkaIntegration() throws InterruptedException, IOException {
         // Produce a message to the input topic
-        producer.send(new ProducerRecord<>(appConfig.getRawTopic(), "key", "value"));
-
-        // Wait for the message to be processed by the Kafka listener
+        producer.send(new ProducerRecord<>(appConfig.getLookupTopic(), "key", TestUtils.product_valid()));
+        producer.send(new ProducerRecord<>(appConfig.getRawTopic(), "key", TestUtils.order_sale_valid()));
         ConsumerRecord<String, String> record = KafkaTestUtils.getSingleRecord(consumer, appConfig.getJoinTopic());
-        assertEquals("value", record.value());
+        JSONAssert.assertEquals(TestUtils.merged_order_product_valid(), record.value(), JSONCompareMode.LENIENT);
     }
 
-    // Define a Kafka listener
-    @KafkaListener(topics = INPUT_TOPIC, groupId = "test-group")
-    public void listen(String message) {
-        // Process the message and produce the result to the output topic
-        String result = message.toUpperCase();
-        producer.send(new ProducerRecord<>(OUTPUT_TOPIC, "key", result));
+    @Test
+    public void testKafkaIntegrationError() throws InterruptedException, IOException {
+        // Produce a message to the input topic that has an error in the format
+        producer.send(new ProducerRecord<>(appConfig.getLookupTopic(), "key", TestUtils.product_valid()));
+        producer.send(new ProducerRecord<>(appConfig.getRawTopic(), "key", TestUtils.order_sale_invalid()));
+        // goes to the error topic
+        ConsumerRecord<String, String> record = KafkaTestUtils.getSingleRecord(consumerError, appConfig.getErrorTopic());
+        JSONAssert.assertEquals(TestUtils.order_sale_invalid(), record.value(), JSONCompareMode.LENIENT);
     }
+
 }

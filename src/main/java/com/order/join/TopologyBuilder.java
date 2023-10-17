@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -34,15 +36,19 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Named;
 
+@Component
 public class TopologyBuilder {
     private static final Logger log = LoggerFactory.getLogger(TopologyBuilder .class);
+
     ApplicationConfiguration appConfig;
 
+    @Autowired
     public TopologyBuilder(ApplicationConfiguration appConfig) {
         Objects.requireNonNull(appConfig, "appConfig is null");
         this.appConfig = appConfig;
     }
 
+    @Autowired
     public Topology createTopology(StreamsBuilder builder) {
         // Create a KStream from the raw input topic
         KStream<String, String> inputTopicStream = builder.stream(appConfig.getRawTopic(),
@@ -83,12 +89,10 @@ public class TopologyBuilder {
 
         KTable<String, String> filteredLookupTable = builder.table(appConfig.getLookupTopicFiltered(),
                 Consumed.with(Serdes.String(), Serdes.String()));
-        
         filteredSourceStream.join(filteredLookupTable, (lv, rv) -> mergeOrderProduct(lv, rv), 
                                                         Joined.keySerde(Serdes.String())
                                                               .valueSerde(Serdes.String()))
         .to(appConfig.getJoinTopic());;
-
         return builder.build();
     }
 

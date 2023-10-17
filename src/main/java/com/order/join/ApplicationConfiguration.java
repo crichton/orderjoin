@@ -1,11 +1,25 @@
 package com.order.join;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.Topology;
 import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.annotation.EnableKafkaStreams;
+import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
+import org.springframework.kafka.config.KafkaStreamsConfiguration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -13,6 +27,8 @@ import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Configuration
+@EnableKafkaStreams
+@EnableKafka
 @ConfigurationProperties(prefix = "orderjoin")
 public class ApplicationConfiguration {
 
@@ -39,6 +55,38 @@ public class ApplicationConfiguration {
         jsonmapper.setDateFormat(new StdDateFormat());
         return jsonmapper;
     }
+
+    @Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME)
+    KafkaStreamsConfiguration kStreamsConfig() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, getApplicationId());
+        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers()); // Kafka broker
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,getAutoOffsetReset());
+        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+
+        return new KafkaStreamsConfiguration(props);
+    }
+
+    /*
+    @Bean
+    public KafkaStreams kafkaStreams(StreamsBuilder builder) {
+        Properties properties = new Properties();
+        properties.put(StreamsConfig.APPLICATION_ID_CONFIG, getApplicationId());
+        properties.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers()); // Kafka broker
+        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,getAutoOffsetReset());
+        TopologyBuilder tb = new TopologyBuilder(this);
+        Topology joinTopology = tb.createTopology(builder);
+        // Create and start the KafkaStreams instance
+        //KafkaStreams kafkaStreams = new KafkaStreams(joinTopology, properties);
+        //kafkaStreams.start();
+
+        // Shutdown hook to gracefully close KafkaStreams on application shutdown
+        //Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close));
+        return kafkaStreams;
+    }
+    */
+
     public String getTrustedPackages() {
         return trustedPackages;
     }
