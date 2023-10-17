@@ -1,7 +1,6 @@
 # orderjoiner
 
-
-      This Project demonstrates a Kafka Streams App that joins messages from 2 topics and merges the data landing in a 3 topic. 
+This Project demonstrates a Kafka Streams App that joins messages from 2 topics and merges the data landing in a 3 topic. 
 
 
 
