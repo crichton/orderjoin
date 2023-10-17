@@ -22,8 +22,7 @@ execute `java -jar build/libs/orderjoin-1.0.0-latest.jar `
 
 ## Data Governance 
   
-
-     The project uses Json Schema to define and validate the message models handled by the stream processing app.  Message models can be found in  src/main/resources/json. The project will generate these Pojo models during compilation. 
+The project uses Json Schema to define and validate the message models handled by the stream processing app.  Message models can be found in  src/main/resources/json. The project will generate these Pojo models during compilation. 
 
 #### Topic Naming Conventions 
 
@@ -41,7 +40,7 @@ error       |=   `error` or `<nothing>`
 
 ## Testing 
 
-    There are TopologyTestDriver JUnit tests as well as EmbeddedKafka JUnit Integrations Tests. 
+There are TopologyTestDriver JUnit tests as well as EmbeddedKafka JUnit Integrations Tests. 
 
 
 
