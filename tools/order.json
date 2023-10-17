@@ -1,0 +1,1 @@
+{ "key": { "catalog_number": "29525", "country": "001" }, "value": { "catalog_number": "29525", "order_number": "03814", "quantity": "2", "sales_date": "2023-07-30T18:21:31.000000Z", "country": "001" }, "audit": { "event_name": "Sales Event", "source_system": "SLS" }}
