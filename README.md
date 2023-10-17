@@ -46,11 +46,11 @@ There are TopologyTestDriver JUnit tests as well as EmbeddedKafka JUnit Integrat
 This is the happy path visualization and design flow for the orderjoiner.    
 
 #### Happy Path Topology 
-![happy path topology](documentation/orderjoin.png)
+![happy path topology](documentation/orderjoiner.png)
 
 
 #### Error Path Topology 
-![error path topology](documentation/orderjoinerrors.png)
+![error path topology](documentation/orderjoinererrors.png)
 
 
 
