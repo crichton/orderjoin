@@ -42,6 +42,16 @@ error       |=   `error` or `<nothing>`
 There are TopologyTestDriver JUnit tests as well as EmbeddedKafka JUnit Integrations Tests. 
 
 
+## Designs 
+This is the happy path visualization and design flow for the orderjoiner.    
+
+#### Happy Path Topology 
+![happy path topology](documentation/orderjoin.png)
+
+
+#### Error Path Topology 
+![error path topology](documentation/orderjoinerrors.png)
+
 
 
 
