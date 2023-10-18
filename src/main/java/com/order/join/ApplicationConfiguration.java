@@ -20,6 +20,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.kafka.config.KafkaStreamsConfiguration;
+import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -67,25 +68,6 @@ public class ApplicationConfiguration {
 
         return new KafkaStreamsConfiguration(props);
     }
-
-    /*
-    @Bean
-    public KafkaStreams kafkaStreams(StreamsBuilder builder) {
-        Properties properties = new Properties();
-        properties.put(StreamsConfig.APPLICATION_ID_CONFIG, getApplicationId());
-        properties.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers()); // Kafka broker
-        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,getAutoOffsetReset());
-        TopologyBuilder tb = new TopologyBuilder(this);
-        Topology joinTopology = tb.createTopology(builder);
-        // Create and start the KafkaStreams instance
-        //KafkaStreams kafkaStreams = new KafkaStreams(joinTopology, properties);
-        //kafkaStreams.start();
-
-        // Shutdown hook to gracefully close KafkaStreams on application shutdown
-        //Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close));
-        return kafkaStreams;
-    }
-    */
 
     public String getTrustedPackages() {
         return trustedPackages;

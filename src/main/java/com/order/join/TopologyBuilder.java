@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -46,6 +47,13 @@ public class TopologyBuilder {
     public TopologyBuilder(ApplicationConfiguration appConfig) {
         Objects.requireNonNull(appConfig, "appConfig is null");
         this.appConfig = appConfig;
+    }
+
+    @Autowired
+    public void setupExeceptionHander(StreamsBuilderFactoryBean sbfb) {
+        ExceptionHandler exceptionHandler = new ExceptionHandler(5, 10000); 
+        sbfb.setStreamsUncaughtExceptionHandler(exceptionHandler); 
+        log.info("Set unCaughtExceptionHander to 5 failtures within 10 seconds");
     }
 
     @Autowired
